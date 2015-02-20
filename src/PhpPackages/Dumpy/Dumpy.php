@@ -28,6 +28,11 @@ class Dumpy
      */
     public function getConfigOption($option)
     {
+        // An exception will be thrown instead of returning NULL or something similar.
+        if ( ! array_key_exists($option, $this->config)) {
+            throw new UnexpectedValueException("Unexpected option name: {$option}");
+        }
+
         return $this->config[$option];
     }
 

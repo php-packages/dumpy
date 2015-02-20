@@ -28,5 +28,10 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         // Let's ensure that str_max_length value was changed.
         expect($this->dumpy->getConfigOption("str_max_length"))->toEqual(100);
+
+        // Whoops!
+        expect(function() use($dumpy) {
+            $dumpy->getConfigOption("foo");
+        })->toThrow("UnexpectedValueException");
     }
 }
