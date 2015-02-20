@@ -100,6 +100,18 @@ class Dumpy
 
                 return (string) $value;
             }
+
+            // Handle strings.
+            case "string": {
+                // Multibyte support?
+                if (strlen($value) > $this->config["str_max_length"]) {
+                    $value = substr($value, 0, $this->config["str_max_length"])."...";
+                }
+
+                $value = str_replace(PHP_EOL, "\\n", $value);
+
+                return "\"{$value}\"";
+            }
         }
     }
 }

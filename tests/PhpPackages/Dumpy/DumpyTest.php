@@ -90,4 +90,22 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         $this->dumpy->configure("round_double", 0);
         expect($this->dumpy->dump(1.23456789))->toBeEqual("1");
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_a_string()
+    {
+        $this->dumpy->configure("str_max_length", 50);
+
+        // Short string without newline characters.
+        expect($this->dumpy->dump("foobar"))->toBeEqual("\"foobar\"");
+
+        // Pass a string that is longer than set str_max_length.
+        expect($this->dumpy->dump(str_repeat("A", 51)))
+            ->toBeEqual("\"".str_repeat("A", 50)."...\"");
+
+        // Pass a string that contains a newline character.
+        expect($this->dumpy->dump(PHP_EOL))->toBeEqual("\"\\n\"");
+    }
 }
