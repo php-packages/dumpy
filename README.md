@@ -24,4 +24,4 @@
     - show its properties and their respective values
     - show its methods (name, visibility, parameters)
 
-I've been thinking about utilising docblock comments.
+I've been also thinking about utilising docblock comments.

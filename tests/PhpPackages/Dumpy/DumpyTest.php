@@ -52,4 +52,20 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         expect($this->dumpy->dump(false))->toBeEqual("FALSE");
         expect($this->dumpy->dump(true))->toBeEqual("TRUE");
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_NULL_value()
+    {
+        // Lowercase.
+        $this->dumpy->configure("null_lowercase", true);
+
+        expect($this->dumpy->dump(null))->toBeEqual("null");
+
+        // Uppercase.
+        $this->dumpy->configure("null_lowercase", false);
+
+        expect($this->dumpy->dump(null))->toBeEqual("NULL");
+    }
 }

@@ -23,6 +23,9 @@ class Dumpy
         // When bool_lowercase is set to TRUE, dump() will return "false" or "true".
         // Otherwise, "FALSE" or "TRUE".
         "bool_lowercase" => false,
+
+        // Same as bool_lowercase, but for NULL values ("null" or "NULL").
+        "null_lowercase" => false,
     ];
 
     /**
@@ -74,6 +77,11 @@ class Dumpy
                 $output = $value ? "true" : "false";
 
                 return $this->config["bool_lowercase"] ? $output : strtoupper($output);
+            }
+
+            // Handle NULL values.
+            case "NULL": {
+                return $this->config["null_lowercase"] ? "null" : "NULL";
             }
         }
     }
