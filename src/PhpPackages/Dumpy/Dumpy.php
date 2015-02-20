@@ -83,6 +83,11 @@ class Dumpy
             case "NULL": {
                 return $this->config["null_lowercase"] ? "null" : "NULL";
             }
+
+            // Handle integers.
+            case "integer": {
+                return (string) $value;
+            }
         }
     }
 }

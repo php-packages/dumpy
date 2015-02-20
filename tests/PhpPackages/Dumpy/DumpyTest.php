@@ -68,4 +68,17 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect($this->dumpy->dump(null))->toBeEqual("NULL");
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_integer_and_double_values()
+    {
+        // Integers.
+        expect($this->dumpy->dump(123))->toBeEqual("123"); // Positive decimal.
+        expect($this->dumpy->dump(-42))->toBeEqual("-42"); // Negative decimal.
+        expect($this->dumpy->dump(0123))->toBeEqual("83"); // Octal.
+        expect($this->dumpy->dump(0x1A))->toBeEqual("26"); // Hexadecimal.
+        expect($this->dumpy->dump(0b1))->toBeEqual("1"); // Binary.
+    }
 }
