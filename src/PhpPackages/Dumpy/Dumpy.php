@@ -26,6 +26,9 @@ class Dumpy
 
         // Same as bool_lowercase, but for NULL values ("null" or "NULL").
         "null_lowercase" => false,
+
+        // Whether float values should be rounded and to what precision.
+        "round_double" => false,
     ];
 
     /**
@@ -91,6 +94,10 @@ class Dumpy
 
             // Handle floats (doubles).
             case "double": {
+                if ($this->config["round_double"] !== false) {
+                    $value = round($value, $this->config["round_double"], PHP_ROUND_HALF_UP);
+                }
+
                 return (string) $value;
             }
         }

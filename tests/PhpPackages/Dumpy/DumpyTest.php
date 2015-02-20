@@ -85,5 +85,9 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         expect($this->dumpy->dump(1.234))->toBeEqual("1.234");
         expect($this->dumpy->dump(1.2e4))->toBeEqual("12000");
         expect($this->dumpy->dump(7E-10))->toBeEqual("7.0E-10");
+
+        // With said precision.
+        $this->dumpy->configure("round_double", 0);
+        expect($this->dumpy->dump(1.23456789))->toBeEqual("1");
     }
 }
