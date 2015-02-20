@@ -29,6 +29,9 @@ class Dumpy
 
         // Whether float values should be rounded and to what precision.
         "round_double" => false,
+
+        // Whether to replace PHP_EOL occurrences with "\\n".
+        "replace_newline" => true,
     ];
 
     /**
@@ -108,7 +111,9 @@ class Dumpy
                     $value = substr($value, 0, $this->config["str_max_length"])."...";
                 }
 
-                $value = str_replace(PHP_EOL, "\\n", $value);
+                if ($this->config["replace_newline"]) {
+                    $value = str_replace(PHP_EOL, "\\n", $value);
+                }
 
                 return "\"{$value}\"";
             }

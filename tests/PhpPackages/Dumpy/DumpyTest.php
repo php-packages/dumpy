@@ -106,6 +106,13 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
             ->toBeEqual("\"".str_repeat("A", 50)."...\"");
 
         // Pass a string that contains a newline character.
+        $this->dumpy->configure("replace_newline", true);
+
         expect($this->dumpy->dump(PHP_EOL))->toBeEqual("\"\\n\"");
+
+        // And now we disable this "feature":
+        $this->dumpy->configure("replace_newline", false);
+
+        expect($this->dumpy->dump(PHP_EOL))->toBeEqual("\"".PHP_EOL."\"");
     }
 }
