@@ -28,7 +28,7 @@ class Dumpy
      */
     public function getConfigOption($option)
     {
-        // @todo
+        return $this->config[$option];
     }
 
     /**
@@ -39,6 +39,15 @@ class Dumpy
      */
     public function configure($option, $value)
     {
-        // @todo
+        // Dumpy won't let you add NEW configuration options, only update the existing ones.
+        if ( ! array_key_exists($option, $this->config)) {
+            // Note: something really weird is going to happen if $option is, say, an array.
+            throw new InvalidArgumentException("Invalid option name: {$option}");
+        }
+
+        // Note that:
+        // 1) the passed value can be of any type and contain anything
+        // 2) the option value will be overridden permanently, no way back
+        $this->config[$option] = $value;
     }
 }

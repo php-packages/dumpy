@@ -24,7 +24,7 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect(function() use($dumpy) {
             $dumpy->configure("foo", null);
-        })->toThrow("InvalidArgumentExpected");
+        })->toThrow("InvalidArgumentException");
 
         // Let's ensure that str_max_length value was changed.
         expect($this->dumpy->getConfigOption("str_max_length"))->toEqual(100);
