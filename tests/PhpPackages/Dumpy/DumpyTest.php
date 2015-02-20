@@ -80,5 +80,10 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         expect($this->dumpy->dump(0123))->toBeEqual("83"); // Octal.
         expect($this->dumpy->dump(0x1A))->toBeEqual("26"); // Hexadecimal.
         expect($this->dumpy->dump(0b1))->toBeEqual("1"); // Binary.
+
+        // Floats (doubles).
+        expect($this->dumpy->dump(1.234))->toBeEqual("1.234");
+        expect($this->dumpy->dump(1.2e4))->toBeEqual("12000");
+        expect($this->dumpy->dump(7E-10))->toBeEqual("7.0E-10");
     }
 }

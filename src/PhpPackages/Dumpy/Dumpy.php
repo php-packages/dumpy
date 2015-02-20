@@ -88,6 +88,11 @@ class Dumpy
             case "integer": {
                 return (string) $value;
             }
+
+            // Handle floats (doubles).
+            case "double": {
+                return (string) $value;
+            }
         }
     }
 }
