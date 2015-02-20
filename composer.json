@@ -1,0 +1,16 @@
+{
+    "name": "php-packages/dumpy",
+    "description": "Better var_dump for PHP.",
+    "license": "MIT",
+
+    "require-dev": {
+        "phpunit/phpunit": "~4",
+        "bound1ess/essence": "~1"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "PhpPackages\\Dumpy\\": "src/PhpPackages/Dumpy"
+        }
+    }
+}
