@@ -19,6 +19,10 @@ class Dumpy
         // the first str_max_length characters (no multibyte support as for now) will be taken,
         // the rest (no matter how many) will be replaced with three dots (...).
         "str_max_length" => 50,
+
+        // When bool_lowercase is set to TRUE, dump() will return "false" or "true".
+        // Otherwise, "FALSE" or "TRUE".
+        "bool_lowercase" => false,
     ];
 
     /**
@@ -54,5 +58,23 @@ class Dumpy
         // 1) the passed value can be of any type and contain anything
         // 2) the option value will be overridden permanently, no way back
         $this->config[$option] = $value;
+    }
+
+    /**
+     * This method helps you get string representations of various PHP data types.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public function dump($value)
+    {
+        switch (gettype($value)) {
+            // Handle boolean values.
+            case "boolean": {
+                $output = $value ? "true" : "false";
+
+                return $this->config["bool_lowercase"] ? $output : strtoupper($output);
+            }
+        }
     }
 }

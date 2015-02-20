@@ -34,4 +34,22 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
             $dumpy->getConfigOption("foo");
         })->toThrow("UnexpectedValueException");
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_a_boolean_value()
+    {
+        // Lowercase output.
+        $this->dumpy->configure("bool_lowercase", true);
+
+        expect($this->dumpy->dump(false))->toBeEqual("false");
+        expect($this->dumpy->dump(true))->toBeEqual("true");
+
+        // Uppercase output.
+        $this->dumpy->configure("bool_lowercase", false);
+
+        expect($this->dumpy->dump(false))->toBeEqual("FALSE");
+        expect($this->dumpy->dump(true))->toBeEqual("TRUE");
+    }
 }
