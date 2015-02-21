@@ -219,18 +219,32 @@ class Dumpy
         // Handle traits.
         $traits = $this->getAllTraitNames($reflector->getTraits());
 
-        $result .= sprintf("Traits: %s", implode(", ", $traits));
+        $result .= sprintf("Traits: %s" . PHP_EOL, implode(", ", $traits));
 
         // Show property values.
         $result .= "Properties:" . PHP_EOL;
 
         foreach ($reflector->getProperties() as $property) {
+            // Make the property readable (accessible) and then read its value.
             $property->setAccessible(true);
+            $dumpedValue = $this->dump($property->getValue($value));
 
+            // Indent the output if it's an array.
+            if (is_array($property->getValue($value))) {
+                $lines = explode(PHP_EOL, $dumpedValue);
+
+                for ($index = 1; $index < count($lines); $index++) {
+                    $lines[$index] = "    " . $lines[$index];
+                }
+
+                $dumpedValue = implode(PHP_EOL, $lines);
+            }
+
+            // Print.
             $result .= sprintf(
                 "    %s: %s" . PHP_EOL,
                 $property->getName(),
-                $this->dump($property->getValue($value))
+                $dumpedValue
             );
         }
 
