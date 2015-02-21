@@ -115,4 +115,24 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect($this->dumpy->dump(PHP_EOL))->toBeEqual("\"".PHP_EOL."\"");
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_an_array()
+    {
+        $this->dumpy->configure("array_max_elements", 100);
+        $this->dumpy->configure("array_indenting", str_repeat(" ", 4));
+
+        $array = [
+            "foo" => "bar",
+            "baz" => [
+                "key" => 13,
+                "another_key" => [42, 420, "foo"]
+            ]
+        ];
+
+        expect($this->dumpy->dump($array))
+            ->toBeEqual(file_get_contents(__DIR__ . "/../../output/nested-array"));
+    }
 }

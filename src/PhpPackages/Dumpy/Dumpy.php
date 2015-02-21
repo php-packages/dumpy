@@ -32,6 +32,13 @@ class Dumpy
 
         // Whether to replace PHP_EOL occurrences with "\\n".
         "replace_newline" => true,
+
+        // If an array has more than array_max_nesting elements,
+        // show the first array_max_nesting elements, skip everything else.
+        "array_max_elements" => 20,
+
+        // Defaults to "    " (4 spaces).
+        "array_indenting" => "    ",
     ];
 
     /**
