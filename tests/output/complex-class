@@ -1,0 +1,11 @@
+Classes: SomeNamespace\SomeClass, SomeNamespace\SomeAbstractClass (abstract)
+Interfaces: SomeNamespace\AnotherInterface, SomeNamespace\OneInterface
+Traits: SomeNamespace\AnotherTrait, SomeNamespace\OneTrait
+
+Properties:
+    foo: "bar"
+    baz: [
+        1,
+        2,
+        3,
+    ]

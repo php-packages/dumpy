@@ -129,6 +129,11 @@ class Dumpy
             case "array": {
                 return $this->printArray($value) . PHP_EOL;
             }
+
+            // Handle objects.
+            case "object": {
+                return $this->printObject($value) . PHP_EOL;
+            }
         }
     }
 
@@ -174,5 +179,14 @@ class Dumpy
         $result .= "]";
 
         return $result;
+    }
+
+    /**
+     * @param object $value
+     * @return string
+     */
+    protected function printObject($value)
+    {
+        return "";
     }
 }
