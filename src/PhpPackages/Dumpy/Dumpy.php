@@ -3,6 +3,9 @@
 use InvalidArgumentException,
     UnexpectedValueException;
 
+use ReflectionClass,
+    ReflectionProperty;
+
 /**
  * Better var_dump for PHP.
  */
@@ -132,7 +135,7 @@ class Dumpy
 
             // Handle objects.
             case "object": {
-                return $this->printObject($value) . PHP_EOL;
+                return $this->printObject($value);
             }
         }
     }
@@ -187,6 +190,36 @@ class Dumpy
      */
     protected function printObject($value)
     {
-        return "";
+        $result    = sprintf("%s #%s" . PHP_EOL, get_class($value), spl_object_hash($value));
+        $reflector = new ReflectionClass($value);
+
+        // Get all parent classes.
+        $classes = [];
+        $parent  = $reflector->getParentClass();
+
+        do {
+            $class = $parent->getName();
+
+            if ($parent->isAbstract()) {
+                $class .= " (abstract)";
+            }
+
+            $classes[] = $class;
+        }
+        while ($parent = $parent->getParentClass());
+
+        $result .= sprintf("Classes: %s" . PHP_EOL, implode(", ", $classes));
+
+        // Handle interfaces.
+        $interfaces = array_keys($reflector->getInterfaces());
+
+        $result .= sprintf("Interfaces: %s" . PHP_EOL, implode(", ", $interfaces));
+
+        // Handle traits.
+        $traits = class_uses($reflector->getName());
+
+        $result .= sprintf("Traits: %s", implode(", ", $traits));
+
+        return $result;
     }
 }
