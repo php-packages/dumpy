@@ -121,7 +121,7 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
      */
     public function it_prints_an_array()
     {
-        $this->dumpy->configure("array_max_elements", 100);
+        $this->dumpy->configure("array_max_elements", 3);
         $this->dumpy->configure("array_indenting", str_repeat(" ", 4));
 
         $array = [
@@ -134,5 +134,15 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect($this->dumpy->dump($array))
             ->toBeEqual(file_get_contents(__DIR__ . "/../../output/nested-array"));
+
+        $array = [
+            "foo" => [
+                "bar" => ["baz", 123, [1, 2], "smth"],
+                123   => "value"
+            ]
+        ];
+
+        expect($this->dumpy->dump($array))
+            ->toBeEqual(file_get_contents(__DIR__ . "/../../output/big-nested-array"));
     }
 }
