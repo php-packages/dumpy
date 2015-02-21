@@ -12,5 +12,11 @@
         "psr-4": {
             "PhpPackages\\Dumpy\\": "src/PhpPackages/Dumpy"
         }
+    },
+
+    "autoload-dev": {
+        "files": [
+            "tests/fixtures/ComplexClass.php"
+        ]
     }
 }

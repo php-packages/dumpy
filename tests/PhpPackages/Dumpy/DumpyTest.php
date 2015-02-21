@@ -145,4 +145,13 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         expect($this->dumpy->dump($array))
             ->toBeEqual(file_get_contents(__DIR__ . "/../../output/big-nested-array"));
     }
+
+    /**
+     * @test
+     */
+    public function it_prints_an_object()
+    {
+        expect($this->dumpy->dump(new \ComplexClass))
+            ->toBeEqual(file_get_contents(__DIR__ . "/../../output/complex-class"));
+    }
 }
