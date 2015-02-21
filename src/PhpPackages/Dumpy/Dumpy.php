@@ -190,6 +190,7 @@ class Dumpy
      */
     protected function printObject($value)
     {
+        // Print general information.
         $result    = sprintf("%s #%s" . PHP_EOL, get_class($value), spl_object_hash($value));
         $reflector = new ReflectionClass($value);
 
@@ -216,10 +217,30 @@ class Dumpy
         $result .= sprintf("Interfaces: %s" . PHP_EOL, implode(", ", $interfaces));
 
         // Handle traits.
-        $traits = class_uses($reflector->getName());
+        $traits = $this->getAllTraitNames($reflector->getTraits());
 
         $result .= sprintf("Traits: %s", implode(", ", $traits));
 
+        // Return the result.
         return $result;
+    }
+
+    /**
+     * @param array $traits
+     * @return array
+     */
+    protected function getAllTraitNames(array $traits)
+    {
+        $names = [];
+
+        foreach ($traits as $trait) {
+            if ($trait->getTraits()) {
+                $names = array_merge($names, $this->getAllTraitNames($trait->getTraits()));
+            }
+
+            $names[] = $trait->getName();
+        }
+
+        return $names;
     }
 }

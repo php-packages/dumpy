@@ -1,6 +1,6 @@
 Classes: SomeNamespace\SomeClass, SomeNamespace\SomeAbstractClass (abstract)
 Interfaces: SomeNamespace\AnotherInterface, SomeNamespace\OneInterface
-Traits: SomeNamespace\AnotherTrait, SomeNamespace\OneTrait
+Traits: SomeNamespace\OneTrait, SomeNamespace\AnotherTrait
 
 Properties:
     foo: "bar"
