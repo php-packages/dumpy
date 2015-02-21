@@ -140,28 +140,23 @@ class Dumpy
     protected function printArray(array $value, $level = 1)
     {
         $result = "[".PHP_EOL;
-        $indentation = str_repeat($this->config["array_indenting"], $level);
 
-        // Check if it's associative.
-        if (array_keys($value) === range(0, count($value) - 1)) {
-            // It is not.
-            foreach ($value as $element) {
-                $result .= $indentation;
-                $result .= $this->dump($element);
-                $result .= ",".PHP_EOL;
+        foreach ($value as $key => $element) {
+            if (is_array($element)) {
+                $element = $this->printArray($element, $level + 1);
+            } else {
+                $element = $this->dump($element);
             }
-        } else {
-            foreach ($value as $key => $element) {
-                if (is_array($element)) {
-                    $element = $this->printArray($element, $level + 1);
-                } else {
-                    $element = $this->dump($element);
-                }
 
-                $result .= $indentation;
+            $result .= str_repeat($this->config["array_indenting"], $level);
+
+            if (array_keys($value) === range(0, count($value) - 1)) {
+                $result .= $element;
+            } else {
                 $result .= sprintf("\"%s\" => %s", $key, $element);
-                $result .= ",".PHP_EOL;
             }
+
+            $result .= ",".PHP_EOL;
         }
 
         $result .= str_repeat($this->config["array_indenting"], $level - 1);
