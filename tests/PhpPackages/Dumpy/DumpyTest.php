@@ -137,7 +137,7 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         $array = [
             "foo" => [
-                "bar" => ["baz", 123, [1, 2], "smth"],
+                "bar" => ["baz", 123, [1, 2], "smth", 321],
                 123   => "value"
             ]
         ];

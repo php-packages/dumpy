@@ -141,8 +141,18 @@ class Dumpy
     {
         $result  = "[" . PHP_EOL;
         $isAssoc = (array_keys($value) !== range(0, count($value) - 1));
+        $counter = 0;
 
         foreach ($value as $key => $element) {
+            $counter++;
+
+            if ($counter > $this->config["array_max_elements"]) {
+                $result .= str_repeat($this->config["array_indenting"], $level);
+                $result .= "..." . PHP_EOL;
+
+                break;
+            }
+
             if (is_array($element)) {
                 $element = $this->printArray($element, $level + 1);
             } else {
@@ -154,7 +164,7 @@ class Dumpy
             if ( ! $isAssoc) {
                 $result .= $element;
             } else {
-                $result .= sprintf("\"%s\" => %s", $key, $element);
+                $result .= sprintf("%s => %s", $this->dump($key), $element);
             }
 
             $result .= "," . PHP_EOL;
