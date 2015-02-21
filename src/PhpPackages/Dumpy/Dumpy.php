@@ -221,6 +221,19 @@ class Dumpy
 
         $result .= sprintf("Traits: %s", implode(", ", $traits));
 
+        // Show property values.
+        $result .= "Properties:" . PHP_EOL;
+
+        foreach ($reflector->getProperties() as $property) {
+            $property->setAccessible(true);
+
+            $result .= sprintf(
+                "    %s: %s" . PHP_EOL,
+                $property->getName(),
+                $this->dump($property->getValue($value))
+            );
+        }
+
         // Return the result.
         return $result;
     }
