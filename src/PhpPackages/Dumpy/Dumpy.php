@@ -115,7 +115,7 @@ class Dumpy
             case "string": {
                 // Multibyte support?
                 if (strlen($value) > $this->config["str_max_length"]) {
-                    $value = substr($value, 0, $this->config["str_max_length"])."...";
+                    $value = substr($value, 0, $this->config["str_max_length"]) . "...";
                 }
 
                 if ($this->config["replace_newline"]) {
@@ -127,7 +127,7 @@ class Dumpy
 
             // Handle arrays.
             case "array": {
-                return $this->printArray($value).PHP_EOL;
+                return $this->printArray($value) . PHP_EOL;
             }
         }
     }
@@ -139,7 +139,8 @@ class Dumpy
      */
     protected function printArray(array $value, $level = 1)
     {
-        $result = "[".PHP_EOL;
+        $result  = "[" . PHP_EOL;
+        $isAssoc = (array_keys($value) !== range(0, count($value) - 1));
 
         foreach ($value as $key => $element) {
             if (is_array($element)) {
@@ -150,13 +151,13 @@ class Dumpy
 
             $result .= str_repeat($this->config["array_indenting"], $level);
 
-            if (array_keys($value) === range(0, count($value) - 1)) {
+            if ( ! $isAssoc) {
                 $result .= $element;
             } else {
                 $result .= sprintf("\"%s\" => %s", $key, $element);
             }
 
-            $result .= ",".PHP_EOL;
+            $result .= "," . PHP_EOL;
         }
 
         $result .= str_repeat($this->config["array_indenting"], $level - 1);
