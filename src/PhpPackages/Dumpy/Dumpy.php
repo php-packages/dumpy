@@ -227,13 +227,20 @@ class Dumpy
         foreach ($reflector->getProperties() as $property) {
             // Make the property readable (accessible) and then read its value.
             $property->setAccessible(true);
-            $dumpedValue = $this->dump($property->getValue($value));
+            $dumpedValue = $this->dump($propertyValue = $property->getValue($value));
 
             // Indent the output if it's an array.
-            if (is_array($property->getValue($value))) {
+            if (is_array($propertyValue)) {
                 $lines = explode(PHP_EOL, $dumpedValue);
 
                 for ($index = 1; $index < count($lines); $index++) {
+                    // Skip empty lines.
+                    if ( ! trim($lines[$index])) {
+                        unset ($lines[$index]);
+
+                        continue;
+                    }
+
                     $lines[$index] = "    " . $lines[$index];
                 }
 
