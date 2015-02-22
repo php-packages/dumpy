@@ -45,6 +45,8 @@ class Dumpy
     ];
 
     /**
+     * Returns the value of given configuration option.
+     *
      * @throws \UnexpectedValueException
      * @param string $option
      * @return mixed
@@ -60,6 +62,8 @@ class Dumpy
     }
 
     /**
+     * Sets a configuration option to given value.
+     *
      * @throws \InvalidArgumentException
      * @param string $option
      * @param mixed $value
@@ -92,6 +96,7 @@ class Dumpy
             case "boolean": {
                 $output = $value ? "true" : "false";
 
+                // You can represent booleans (and NULLs) in either lower- or uppercase format.
                 return $this->config["bool_lowercase"] ? $output : strtoupper($output);
             }
 
@@ -107,6 +112,7 @@ class Dumpy
 
             // Handle floats (doubles).
             case "double": {
+                // Dumpy allows you to round floats to round_double decimal points.
                 if ($this->config["round_double"] !== false) {
                     $value = round($value, $this->config["round_double"], PHP_ROUND_HALF_UP);
                 }
@@ -116,11 +122,13 @@ class Dumpy
 
             // Handle strings.
             case "string": {
-                // Multibyte support?
+                // @suggestion Multibyte support?
+                // Look above for the detailed explanation.
                 if (strlen($value) > $this->config["str_max_length"]) {
                     $value = substr($value, 0, $this->config["str_max_length"]) . "...";
                 }
 
+                // Dumpy allows you to replace newline characters with "\\n".
                 if ($this->config["replace_newline"]) {
                     $value = str_replace(PHP_EOL, "\\n", $value);
                 }
@@ -141,19 +149,27 @@ class Dumpy
     }
 
     /**
+     * Returns a string representation of given array.
+     *
      * @param array $value
      * @param integer $level
      * @return string
      */
     protected function printArray(array $value, $level = 1)
     {
+        // Open bracket.
         $result  = "[" . PHP_EOL;
+        // This approach is much faster than the one that uses array_values function.
+        // To make it even faster, we cache the value.
         $isAssoc = (array_keys($value) !== range(0, count($value) - 1));
+        // We'll need this variable to determine whether we need to omit remaining elements.
         $counter = 0;
 
         foreach ($value as $key => $element) {
             $counter++;
 
+            // Decide whether to omit the rest of the values in given array
+            // depending on array_max_elements value.
             if ($counter > $this->config["array_max_elements"]) {
                 $result .= str_repeat($this->config["array_indenting"], $level);
                 $result .= "..." . PHP_EOL;
@@ -167,6 +183,7 @@ class Dumpy
                 $element = $this->dump($element);
             }
 
+            // Maintain the proper indenting.
             $result .= str_repeat($this->config["array_indenting"], $level);
 
             if ( ! $isAssoc) {
@@ -178,13 +195,17 @@ class Dumpy
             $result .= "," . PHP_EOL;
         }
 
+        // Maintain the proper indenting.
         $result .= str_repeat($this->config["array_indenting"], $level - 1);
+        // Close bracket.
         $result .= "]";
 
         return $result;
     }
 
     /**
+     * Returns a string representation of given object.
+     *
      * @param object $value
      * @return string
      */
@@ -289,10 +310,10 @@ class Dumpy
      * Format: "name: value\n".
      *
      * @param \ReflectionClass $reflector
-     * @param object $value
+     * @param object $object
      * @return string
      */
-    protected function getPropertyValues(ReflectionClass $reflector, $value)
+    protected function getPropertyValues(ReflectionClass $reflector, $object)
     {
         $result = "";
 
@@ -300,7 +321,7 @@ class Dumpy
             // Make the property readable (accessible) and then read its value.
             $property->setAccessible(true);
 
-            $dumpedValue = $this->dump($propertyValue = $property->getValue($value));
+            $dumpedValue = $this->dump($propertyValue = $property->getValue($object));
 
             // Indent the output if it's an array.
             if (is_array($propertyValue)) {
