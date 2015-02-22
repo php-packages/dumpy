@@ -193,22 +193,11 @@ class Dumpy
         $result    = $this->getGeneralObjectInfo($value);
         $reflector = new ReflectionClass($value);
 
-        // Get all parent classes.
-        $classes = [];
-        $parent  = $reflector->getParentClass();
-
-        do {
-            $class = $parent->getName();
-
-            if ($parent->isAbstract()) {
-                $class .= " (abstract)";
-            }
-
-            $classes[] = $class;
-        }
-        while ($parent = $parent->getParentClass());
-
-        $result .= sprintf("Classes: %s" . PHP_EOL, implode(", ", $classes));
+        // Display all parent classes.
+        $result .= sprintf(
+            "Classes: %s" . PHP_EOL,
+            implode(", ", $this->getAllParentClassNames($reflector))
+        );
 
         // Handle interfaces.
         $interfaces = array_keys($reflector->getInterfaces());
@@ -254,7 +243,6 @@ class Dumpy
             );
         }
 
-        // Return the result.
         return $result;
     }
 
@@ -294,5 +282,28 @@ class Dumpy
     protected function getGeneralObjectInfo($object)
     {
         return sprintf("%s #%s", get_class($object), spl_object_hash($object));
+    }
+
+    /**
+     * Returns ALL (inheritance is taken into account) parent classes, including abstract ones.
+     *
+     * @param \ReflectionClass $reflector
+     * @return array
+     */
+    protected function getAllParentClassNames(ReflectionClass $reflector)
+    {
+        $classes = [];
+
+        if ($parent = $reflector->getParentClass()) {
+            if ( ! $parent->isAbstract()) {
+                $classes[] = $parent->getName();
+            } else {
+                $classes[] = sprintf("%s (abstract)", $parent->getName());
+            }
+
+            $classes = array_merge($classes, $this->getAllParentClassNames($parent));
+        }
+
+        return $classes;
     }
 }
