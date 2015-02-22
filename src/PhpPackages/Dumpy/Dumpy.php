@@ -260,6 +260,9 @@ class Dumpy
     }
 
     /**
+     * At the moment (PHP 5.6), ReflectionClass::getTraits doesn't care about inheritance.
+     * I took the recursive approach to this problem since data volume is pretty small.
+     *
      * @param array $traits
      * @return array
      */
@@ -268,11 +271,14 @@ class Dumpy
         $names = [];
 
         foreach ($traits as $trait) {
+            /**
+             * @var \ReflectionClass $trait
+             */
+            $names[] = $trait->getName();
+
             if ($trait->getTraits()) {
                 $names = array_merge($names, $this->getAllTraitNames($trait->getTraits()));
             }
-
-            $names[] = $trait->getName();
         }
 
         return $names;

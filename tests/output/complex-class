@@ -1,6 +1,6 @@
 Classes: SomeNamespace\SomeClass, SomeNamespace\SomeAbstractClass (abstract)
 Interfaces: SomeNamespace\AnotherInterface, SomeNamespace\OneInterface
-Traits: SomeNamespace\OneTrait, SomeNamespace\AnotherTrait
+Traits: SomeNamespace\AnotherTrait, SomeNamespace\OneTrait
 Properties:
     foo: "bar"
     baz: [
