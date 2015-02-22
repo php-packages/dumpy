@@ -5,6 +5,14 @@
             <directory>tests/PhpPackages/Dumpy</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory>src/PhpPackages/Dumpy</directory>
+        </whitelist>
+        <blacklist>
+            <directory>vendor</directory>
+        </blacklist>
+    </filter>
 </phpunit>
 <!--
 vim: syntax=xml
