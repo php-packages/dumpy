@@ -30,7 +30,7 @@ class Dumpy
         // Same as bool_lowercase, but for NULL values ("null" or "NULL").
         "null_lowercase" => false,
 
-        // Whether float values should be rounded and to what precision.
+        // Whether float values should be rounded and to what precision (decimal points).
         "round_double" => false,
 
         // Whether to replace PHP_EOL occurrences with "\\n".
