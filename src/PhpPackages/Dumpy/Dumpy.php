@@ -190,8 +190,7 @@ class Dumpy
      */
     protected function printObject($value)
     {
-        // Print general information.
-        $result    = sprintf("%s #%s" . PHP_EOL, get_class($value), spl_object_hash($value));
+        $result    = $this->getGeneralObjectInfo($value);
         $reflector = new ReflectionClass($value);
 
         // Get all parent classes.
@@ -282,5 +281,18 @@ class Dumpy
         }
 
         return $names;
+    }
+
+    /**
+     * Returns a well-formed string that contains:
+     *  - object's fully qualified class name
+     *  - object's unique ID
+     *
+     * @param object $object
+     * @return string
+     */
+    protected function getGeneralObjectInfo($object)
+    {
+        return sprintf("%s #%s", get_class($object), spl_object_hash($object));
     }
 }
