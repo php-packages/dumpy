@@ -215,37 +215,7 @@ class Dumpy
 
         // Display property values.
         $result .= "Properties:" . PHP_EOL;
-
-        foreach ($reflector->getProperties() as $property) {
-            // Make the property readable (accessible) and then read its value.
-            $property->setAccessible(true);
-            $dumpedValue = $this->dump($propertyValue = $property->getValue($value));
-
-            // Indent the output if it's an array.
-            if (is_array($propertyValue)) {
-                $lines = explode(PHP_EOL, $dumpedValue);
-
-                for ($index = 1; $index < count($lines); $index++) {
-                    // Skip empty lines.
-                    if ( ! trim($lines[$index])) {
-                        unset ($lines[$index]);
-
-                        continue;
-                    }
-
-                    $lines[$index] = "    " . $lines[$index];
-                }
-
-                $dumpedValue = implode(PHP_EOL, $lines);
-            }
-
-            // Print.
-            $result .= sprintf(
-                "    %s: %s" . PHP_EOL,
-                $property->getName(),
-                $dumpedValue
-            );
-        }
+        $result .= $this->getPropertyValues($reflector, $value);
 
         return $result;
     }
@@ -312,5 +282,47 @@ class Dumpy
         }
 
         return $classes;
+    }
+
+    /**
+     * Returns all object's property names and their respective values.
+     * Format: "name: value\n".
+     *
+     * @param \ReflectionClass $reflector
+     * @param object $value
+     * @return string
+     */
+    protected function getPropertyValues(ReflectionClass $reflector, $value)
+    {
+        $result = "";
+
+        foreach ($reflector->getProperties() as $property) {
+            // Make the property readable (accessible) and then read its value.
+            $property->setAccessible(true);
+
+            $dumpedValue = $this->dump($propertyValue = $property->getValue($value));
+
+            // Indent the output if it's an array.
+            if (is_array($propertyValue)) {
+                $lines = explode(PHP_EOL, $dumpedValue);
+
+                for ($index = 1; $index < count($lines); $index++) {
+                    // Skip empty lines.
+                    if ( ! trim($lines[$index])) {
+                        unset ($lines[$index]);
+
+                        continue;
+                    }
+
+                    $lines[$index] = "    " . $lines[$index];
+                }
+
+                $dumpedValue = implode(PHP_EOL, $lines);
+            }
+
+            $result .= sprintf("    %s: %s" . PHP_EOL, $property->getName(), $dumpedValue);
+        }
+
+        return $result;
     }
 }
