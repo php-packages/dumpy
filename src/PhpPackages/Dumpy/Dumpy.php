@@ -148,8 +148,9 @@ class Dumpy
             case "object": {
                 return $this->printObject($value);
             }
+            // @codeCoverageIgnoreStart
         }
-    }
+    } // @codeCoverageIgnoreEnd
 
     /**
      * Returns a string representation of given array.
