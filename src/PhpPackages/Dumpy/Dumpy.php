@@ -190,8 +190,10 @@ class Dumpy
      */
     protected function printObject($value)
     {
-        $result    = $this->getGeneralObjectInfo($value);
         $reflector = new ReflectionClass($value);
+
+        // Display the general information about given object.
+        $result = $this->getGeneralObjectInfo($value);
 
         // Display all parent classes.
         $result .= sprintf(
@@ -199,17 +201,19 @@ class Dumpy
             implode(", ", $this->getAllParentClassNames($reflector))
         );
 
-        // Handle interfaces.
-        $interfaces = array_keys($reflector->getInterfaces());
+        // Display all interfaces (interface inheritance is supported).
+        $result .= sprintf(
+            "Interfaces: %s" . PHP_EOL,
+            implode(", ", $reflector->getInterfaceNames())
+        );
 
-        $result .= sprintf("Interfaces: %s" . PHP_EOL, implode(", ", $interfaces));
+        // Display all class traits.
+        $result .= sprintf(
+            "Traits: %s" . PHP_EOL,
+            implode(", ", $this->getAllTraitNames($reflector))
+        );
 
-        // Handle traits.
-        $traits = $this->getAllTraitNames($reflector->getTraits());
-
-        $result .= sprintf("Traits: %s" . PHP_EOL, implode(", ", $traits));
-
-        // Show property values.
+        // Display property values.
         $result .= "Properties:" . PHP_EOL;
 
         foreach ($reflector->getProperties() as $property) {
@@ -250,21 +254,21 @@ class Dumpy
      * At the moment (PHP 5.6), ReflectionClass::getTraits doesn't care about inheritance.
      * I took the recursive approach to this problem since data volume is pretty small.
      *
-     * @param array $traits
+     * @param \ReflectionClass $trait
      * @return array
      */
-    protected function getAllTraitNames(array $traits)
+    protected function getAllTraitNames(ReflectionClass $trait)
     {
         $names = [];
 
-        foreach ($traits as $trait) {
+        foreach ($trait->getTraits() as $trait) {
             /**
              * @var \ReflectionClass $trait
              */
             $names[] = $trait->getName();
 
             if ($trait->getTraits()) {
-                $names = array_merge($names, $this->getAllTraitNames($trait->getTraits()));
+                $names = array_merge($names, $this->getAllTraitNames($trait));
             }
         }
 
@@ -295,6 +299,9 @@ class Dumpy
         $classes = [];
 
         if ($parent = $reflector->getParentClass()) {
+            /**
+             * @var \ReflectionClass $parent
+             */
             if ( ! $parent->isAbstract()) {
                 $classes[] = $parent->getName();
             } else {
