@@ -151,13 +151,17 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
      */
     public function it_prints_an_object()
     {
-        //var_dump($this->dumpy->dump(new \SomeNamespace\ComplexClass));
-        //var_dump(file_get_contents(__DIR__ . "/../../output/complex-class"));exit;
+        $this->dumpy->configure("object_limited_info", false);
 
         expect($this->dumpy->dump($object = new \SomeNamespace\ComplexClass))
             ->toContain(file_get_contents(__DIR__ . "/../../output/complex-class"));
 
         expect($this->dumpy->dump($object))
             ->toMatch("/SomeNamespace\\\ComplexClass\s#(\w+)/");
+
+        $this->dumpy->configure("object_limited_info", true);
+
+        expect($this->dumpy->dump($object))
+            ->notToMatch("/(Classes:|Interfaces:|Traits:)/");
     }
 }

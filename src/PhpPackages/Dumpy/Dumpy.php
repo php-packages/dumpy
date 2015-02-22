@@ -42,6 +42,9 @@ class Dumpy
 
         // Defaults to "    " (4 spaces).
         "array_indenting" => "    ",
+
+        // Whether NOT to print parent classes, interfaces and traits.
+        "object_limited_info" => true,
     ];
 
     /**
@@ -216,23 +219,25 @@ class Dumpy
         // Display the general information about given object.
         $result = $this->getGeneralObjectInfo($value);
 
-        // Display all parent classes.
-        $result .= sprintf(
-            "Classes: %s" . PHP_EOL,
-            implode(", ", $this->getAllParentClassNames($reflector))
-        );
+        if ( ! $this->config["object_limited_info"]) {
+            // Display all parent classes.
+            $result .= sprintf(
+                "Classes: %s" . PHP_EOL,
+                implode(", ", $this->getAllParentClassNames($reflector))
+            );
 
-        // Display all interfaces (interface inheritance is supported).
-        $result .= sprintf(
-            "Interfaces: %s" . PHP_EOL,
-            implode(", ", $reflector->getInterfaceNames())
-        );
+            // Display all interfaces (interface inheritance is supported).
+            $result .= sprintf(
+                "Interfaces: %s" . PHP_EOL,
+                implode(", ", $reflector->getInterfaceNames())
+            );
 
-        // Display all class traits.
-        $result .= sprintf(
-            "Traits: %s" . PHP_EOL,
-            implode(", ", $this->getAllTraitNames($reflector))
-        );
+            // Display all class traits.
+            $result .= sprintf(
+                "Traits: %s" . PHP_EOL,
+                implode(", ", $this->getAllTraitNames($reflector))
+            );
+        }
 
         // Display property values.
         $result .= "Properties:" . PHP_EOL;
