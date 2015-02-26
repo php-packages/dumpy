@@ -163,5 +163,10 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect($this->dumpy->dump($object))
             ->notToMatch("/(Classes:|Interfaces:|Traits:)/");
+
+        // Test a fix.
+        $object->baz = $object;
+
+        expect($this->dumpy->dump($object))->toContain("SomeNamespace\ComplexClass");
     }
 }
