@@ -218,7 +218,7 @@ class Dumpy
         $reflector = new ReflectionClass($value);
 
         // Display the general information about given object.
-        $result = $this->getGeneralObjectInfo($value);
+        $result = $this->getGeneralObjectInfo($value) . PHP_EOL;
 
         if ( ! $this->config["object_limited_info"]) {
             // Display all parent classes.
@@ -327,7 +327,12 @@ class Dumpy
             // Make the property readable (accessible) and then read its value.
             $property->setAccessible(true);
 
-            $dumpedValue = $this->dump($propertyValue = $property->getValue($object));
+            // The issue fix: possible StackOverflowException.
+            if (is_object($propertyValue = $property->getValue($object))) {
+                $dumpedValue = $this->getGeneralObjectInfo($propertyValue);
+            } else {
+                $dumpedValue = $this->dump($propertyValue);
+            }
 
             // Indent the output if it's an array.
             if (is_array($propertyValue)) {
