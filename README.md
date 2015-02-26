@@ -1,4 +1,4 @@
-# Dumpy
+# Dumpy 1.0.1
 
 Better var_dump for PHP.
 
