@@ -161,6 +161,10 @@ class Dumpy
      */
     protected function printArray(array $value, $level = 1)
     {
+        if (count($value) < 1) {
+            return "[]";
+        }
+
         // Open bracket.
         $result  = "[" . PHP_EOL;
         // This approach is much faster than the one that uses array_values function.

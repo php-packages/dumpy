@@ -124,6 +124,8 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
         $this->dumpy->configure("array_max_elements", 3);
         $this->dumpy->configure("array_indenting", str_repeat(" ", 4));
 
+        expect($this->dumpy->dump([]))->toBeEqual("[]" . PHP_EOL);
+
         $array = [
             "foo" => "bar",
             "baz" => [
