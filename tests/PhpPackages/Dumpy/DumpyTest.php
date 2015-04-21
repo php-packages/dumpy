@@ -126,6 +126,9 @@ class DumpyTest extends \Essence\Extensions\PhpunitExtension
 
         expect($this->dumpy->dump([]))->toBeEqual("[]" . PHP_EOL);
 
+        // @todo
+        expect($this->dumpy->dump([new \stdClass]))->toContain("stdClass");
+
         $array = [
             "foo" => "bar",
             "baz" => [
