@@ -226,27 +226,25 @@ class Dumpy
 
         if ( ! $this->config["object_limited_info"]) {
             // Display all parent classes.
-            $result .= sprintf(
-                "Classes: %s" . PHP_EOL,
-                implode(", ", $this->getAllParentClassNames($reflector))
-            );
+            if (count($parents = $this->getAllParentClassNames($reflector)) > 0) {
+                $result .= sprintf("Classes: %s" . PHP_EOL, implode(", ", $parents));
+            }
 
             // Display all interfaces (interface inheritance is supported).
-            $result .= sprintf(
-                "Interfaces: %s" . PHP_EOL,
-                implode(", ", $reflector->getInterfaceNames())
-            );
+            if (count($interfaces = $reflector->getInterfaceNames()) > 0) {
+                $result .= sprintf("Interfaces: %s" . PHP_EOL, implode(", ", $interfaces));
+            }
 
             // Display all class traits.
-            $result .= sprintf(
-                "Traits: %s" . PHP_EOL,
-                implode(", ", $this->getAllTraitNames($reflector))
-            );
+            if (count($traits = $this->getAllTraitNames($reflector)) > 0) {
+                $result .= sprintf("Traits: %s" . PHP_EOL, implode(", ", $traits));
+            }
         }
 
         // Display property values.
-        $result .= "Properties:" . PHP_EOL;
-        $result .= $this->getPropertyValues($reflector, $value);
+        if ($info = $this->getPropertyValues($reflector, $value)) {
+            $result .= "Properties:" . PHP_EOL . $info;
+        }
 
         return $result;
     }
