@@ -187,6 +187,8 @@ class Dumpy
 
             if (is_array($element)) {
                 $element = $this->printArray($element, $level + 1);
+            } elseif (is_object($element)) {
+                $element = $this->printObject($element, $level + 1);
             } else {
                 $element = $this->dump($element);
             }
@@ -203,9 +205,9 @@ class Dumpy
             $result .= "," . PHP_EOL;
         }
 
-        // Maintain the proper indenting.
+        // Maintain proper indenting.
         $result .= str_repeat($this->config["array_indenting"], $level - 1);
-        // Close bracket.
+        // Closing bracket.
         $result .= "]";
 
         return $result;
@@ -215,9 +217,10 @@ class Dumpy
      * Returns a string representation of given object.
      *
      * @param object $value
+     * @param integer $level
      * @return string
      */
-    protected function printObject($value)
+    protected function printObject($value, $level = 0)
     {
         $reflector = new ReflectionClass($value);
 
@@ -242,8 +245,10 @@ class Dumpy
         }
 
         // Display property values.
-        if ($info = $this->getPropertyValues($reflector, $value)) {
-            $result .= "Properties:" . PHP_EOL . $info;
+        if ($info = $this->getPropertyValues($reflector, $value, $level + 1)) {
+            $result .=
+                str_repeat($this->config["array_indenting"], $level)
+                . "Properties:" . PHP_EOL . $info;
         }
 
         return $result;
@@ -319,11 +324,13 @@ class Dumpy
      *
      * @param \ReflectionClass $reflector
      * @param object $object
+     * @param integer $level
      * @return string
      */
-    protected function getPropertyValues(ReflectionClass $reflector, $object)
+    protected function getPropertyValues(ReflectionClass $reflector, $object, $level)
     {
         $result = "";
+        $indent = str_repeat($this->config["array_indenting"], $level);
 
         foreach ($reflector->getProperties() as $property) {
             // Make the property readable (accessible) and then read its value.
@@ -348,13 +355,17 @@ class Dumpy
                         continue;
                     }
 
-                    $lines[$index] = "    " . $lines[$index];
+                    $lines[$index] = $indent . $lines[$index];
                 }
 
                 $dumpedValue = implode(PHP_EOL, $lines);
             }
 
-            $result .= sprintf("    %s: %s" . PHP_EOL, $property->getName(), $dumpedValue);
+            $result .= sprintf(
+                $indent . "%s: %s" . PHP_EOL,
+                $property->getName(),
+                $dumpedValue
+            );
         }
 
         return $result;
