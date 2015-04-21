@@ -74,7 +74,7 @@ class Dumpy
      */
     public function configure($option, $value)
     {
-        // Dumpy won't let you add NEW configuration options, only update the existing ones.
+        // Dumpy won't let you add any custom config options, only update the existing ones.
         if ( ! array_key_exists($option, $this->config)) {
             // Note: something really weird is going to happen if $option is, say, an array.
             throw new InvalidArgumentException("Invalid option name: {$option}");
@@ -330,7 +330,7 @@ class Dumpy
     protected function getPropertyValues(ReflectionClass $reflector, $object, $level)
     {
         $result = "";
-        $indent = str_repeat($this->config["array_indenting"], $level);
+        $indenting = str_repeat($this->config["array_indenting"], $level);
 
         foreach ($reflector->getProperties() as $property) {
             // Make the property readable (accessible) and then read its value.
@@ -345,24 +345,21 @@ class Dumpy
 
             // Indent the output if it's an array.
             if (is_array($propertyValue)) {
-                $lines = explode(PHP_EOL, $dumpedValue);
+                $lines = [];
 
-                for ($index = 1; $index < count($lines); $index++) {
-                    // Skip empty lines.
-                    if ( ! trim($lines[$index])) {
-                        unset ($lines[$index]);
-
-                        continue;
+                foreach (explode(PHP_EOL, $dumpedValue) as $line) {
+                    if ($line !== "[") {
+                        $lines[] = $indenting . $line;
+                    } else {
+                        $lines[] = $line;
                     }
-
-                    $lines[$index] = $indent . $lines[$index];
                 }
 
                 $dumpedValue = implode(PHP_EOL, $lines);
             }
 
             $result .= sprintf(
-                $indent . "%s: %s" . PHP_EOL,
+                $indenting . "%s: %s" . PHP_EOL,
                 $property->getName(),
                 $dumpedValue
             );
